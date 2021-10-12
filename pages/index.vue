@@ -1,7 +1,10 @@
 <template>
-  <Tutorial/>
+  <div>
+    <Tutorial />
+    <SpotifyAppAuth />
+  </div>
 </template>
 
 <script>
-export default {}
+export default {};
 </script>
