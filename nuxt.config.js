@@ -14,6 +14,16 @@ export default {
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
   },
 
+  router: {
+    extendRoutes(routes, resolve) {
+      routes.push({
+        name: "authorize_wait_time",
+        path: "/authorize/:waitTime",
+        component: resolve(__dirname, "pages/authorize.vue")
+      });
+    }
+  },
+
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 

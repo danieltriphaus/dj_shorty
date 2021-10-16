@@ -1,5 +1,5 @@
 <template>
-  <span />
+  <span>{{ waitTime }} </span>
 </template>
 
 <script>
@@ -11,10 +11,12 @@ export default {
       authorization_code: null,
       spotify_access_token: null,
       oauth_redirect_url: null,
+      waitTime: 0,
       config,
     };
   },
   fetch() {
+    this.waitTime = this.$route.params.waitTime;
     this.authorization_code = this.$route.query["code"];
 
     if (this.authorization_code) {

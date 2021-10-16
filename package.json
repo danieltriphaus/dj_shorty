@@ -7,7 +7,7 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "test": "jest"
+    "test": "jest --runInBand --maxWorker=1"
   },
   "dependencies": {
     "@google-cloud/datastore": "6.6.0",
