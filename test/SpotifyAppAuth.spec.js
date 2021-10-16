@@ -1,21 +1,30 @@
 import { mount, shallowMount } from "@vue/test-utils";
 import SpotifyAppAuth from "@/components/SpotifyAppAuth.vue";
+import nuxtConfig from "../nuxt.config";
 
 describe("SpotifyAppAuth", () => {
+  //Eliminate JSDOM Error for Navigation
+  let assignMock = jest.fn();
+  delete window.location;
+  window.location = { assign: assignMock };
+  afterEach(() => {
+    assignMock.mockClear();
+  });
+
   test("is a Vue instance", () => {
-    const wrapper = mount(SpotifyAppAuth);
+    let wrapper = shallowMount(SpotifyAppAuth, {
+      mocks: {
+        $config: nuxtConfig.publicRuntimeConfig
+      }
+    });
     expect(wrapper.vm).toBeTruthy();
   });
 
   test("emits access token response", async () => {
-    window.location = {
-      ...window.location,
-      assign: jest.fn()
-    };
-
     let wrapper = shallowMount(SpotifyAppAuth, {
       mocks: {
-        $route: { query: { code: "test_authorization_code" } }
+        $route: { query: { code: "test_authorization_code" } },
+        $config: nuxtConfig.publicRuntimeConfig
       }
     });
 
@@ -45,7 +54,11 @@ describe("SpotifyAppAuth", () => {
       assign: jest.fn()
     };
 
-    let wrapper = mount(SpotifyAppAuth);
+    let wrapper = shallowMount(SpotifyAppAuth, {
+      mocks: {
+        $config: nuxtConfig.publicRuntimeConfig
+      }
+    });
 
     expect(wrapper.vm.$data.oauth_redirect_url).toBe(
       "https://accounts.spotify.com/authorize?" +

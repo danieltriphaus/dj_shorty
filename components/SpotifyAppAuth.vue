@@ -3,12 +3,15 @@
 </template>
 
 <script>
+import config from "../ext_config/spotify.config";
+
 export default {
   data() {
     return {
       authorization_code: null,
       spotify_access_token: null,
       oauth_redirect_url: null,
+      config,
     };
   },
   fetch() {
@@ -17,20 +20,23 @@ export default {
     if (this.authorization_code) {
       this.$axios({
         method: "POST",
-        url: "/api/token",
-        baseURL: "https://accounts.spotify.com",
+        url: this.config.authorization.tokenEndpoint,
+        baseURL: this.config.authorization.baseUrl,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
           Authorization:
             "Basic " +
             Buffer.from(
-              "5d32c6be193a454aa17e5b420ed8501e:53d4f739e85644e78a0a9122bf45b151"
+              this.config.clientId + ":" + this.config.clientSecret
             ).toString("base64"),
         },
         data: encodeURI(
-          "grant_type=authorization_code&code=" +
+          "grant_type=" +
+            this.config.authorization.grantType +
+            "&code=" +
             this.authorization_code +
-            "&redirect_uri=https://bu7be.sse.codesandbox.io/"
+            "&redirect_uri=" +
+            this.$config.baseURL
         ),
       })
         .then((response) => {
@@ -42,11 +48,13 @@ export default {
   mounted() {
     if (!this.authorization_code) {
       this.oauth_redirect_url =
-        "https://accounts.spotify.com/authorize?" +
+        this.config.authorization.baseUrl +
+        this.config.authorization.endpoint +
+        "?" +
         new URLSearchParams({
-          client_id: "5d32c6be193a454aa17e5b420ed8501e",
+          client_id: this.config.clientId,
           response_type: "code",
-          redirect_uri: "https://bu7be.sse.codesandbox.io/",
+          redirect_uri: this.$config.baseURL,
           //ToDo: state: CSRF Token
           scopes: "playlist-modify-public",
         });

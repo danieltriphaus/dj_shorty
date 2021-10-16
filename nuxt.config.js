@@ -27,10 +27,16 @@ export default {
   buildModules: [],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ["@nuxtjs/axios"],
+  modules: ["@nuxtjs/axios", "express"],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 
-  axios: {}
+  axios: {},
+
+  serverMiddleware: ["~/api/index.js"],
+
+  publicRuntimeConfig: {
+    baseURL: process.env.BASE_URL || "https://bu7be.sse.codesandbox.io/"
+  }
 };
