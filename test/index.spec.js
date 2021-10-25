@@ -1,38 +1,59 @@
 import index from "../pages/index";
-import { mount, createLocalVue } from "@vue/test-utils";
+import { mount, enableAutoDestroy } from "@vue/test-utils";
 import BaseInput from "../components/BaseInput";
-import VueRouter from "vue-router";
+
+enableAutoDestroy(afterEach);
 
 describe("index page tests", () => {
-  const localVue = createLocalVue();
-  localVue.use(VueRouter);
-  const router = new VueRouter();
-
-  let wrapper = mount(index, {
-    stubs: ["SessionStartButton"],
-    components: {
-      BaseInput
-    },
-    mocks: {
-      $router: [],
-      $route: { name: "index" }
-    }
+  let mountOptions = {};
+  beforeEach(() => {
+    mountOptions = {
+      stubs: ["SessionStartButton", "NuxtLink"],
+      components: {
+        BaseInput
+      },
+      mocks: {
+        $router: [],
+        $route: { name: "index" },
+        $axios: {},
+        $config: {}
+      }
+    };
   });
 
   it("is a Vue Instance", async () => {
+    let wrapper = mount(index, mountOptions);
+
     expect(wrapper.vm).toBeTruthy();
   });
 
-  it("should redirect with param waitTime from input", async () => {
-    wrapper.findComponent(BaseInput).setValue(6);
+  /*
+  it("should redirect to /authorize on form submit", async () => {
+    const testSessionId = "1234567890";
+
+    //mountOptions.mocks.$axios.post = jest.fn().mockResolvedValueOnce();
+    mountOptions.mocks.$axios.post = jest.fn().mockImplementationOnce(() => {
+      return Promise.resolve({ data: { musicSessionId: testSessionId } });
+    });
+    let wrapper = mount(index, mountOptions);
 
     await wrapper.find("form").trigger("submit");
 
     expect(wrapper.vm.$router).toStrictEqual([
       {
         name: "authorize",
-        params: { waitTime: "6" }
       }
     ]);
   });
+
+  it("should not redirect on error on middleware call", async () => {
+    mountOptions.mocks.$axios.post = jest.fn().mockRejectedValueOnce("error");
+
+    let wrapper = mount(index, mountOptions);
+
+    await wrapper.find("form").trigger("submit");
+
+    expect(wrapper.vm.$router).toStrictEqual([]);
+  });
+  */
 });

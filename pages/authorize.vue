@@ -1,7 +1,10 @@
 <template>
-  <SpotifyAppAuth />
+  <span />
+  <!-- <SpotifyAppAuth /> -->
 </template>
 
 <script>
-export default {};
+export default {
+  middleware: "authorize",
+};
 </script>
