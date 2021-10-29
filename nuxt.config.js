@@ -18,7 +18,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ["~/plugins/spotifyClient.js"],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -32,7 +32,9 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 
-  axios: {},
+  axios: {
+    baseURL: process.env.BASE_URL || "https://bu7be.sse.codesandbox.io/"
+  },
 
   serverMiddleware: ["~/api/index.js"],
 

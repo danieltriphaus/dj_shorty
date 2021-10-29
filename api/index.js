@@ -3,11 +3,13 @@ import { Datastore } from "@google-cloud/datastore";
 import axios from "axios";
 import spotifyConfig from "../ext_config/spotify.config";
 import cookieParser from "cookie-parser";
+import accessToken from "./routes/access_token";
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(accessToken);
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "bu7be.sse.codesandbox.io"); // update to match the domain you will make the request from
@@ -18,18 +20,10 @@ app.use(function (req, res, next) {
   next();
 });
 
-/**
- * logic for our api will go here
- */
 export default {
   path: "/api",
   handler: app
 };
-
-app.get("/api/test", async (req, res) => {
-  res.status(200);
-  res.end();
-});
 
 app.post("/music_session", async (req, res) => {
   let datastore = new Datastore({
@@ -87,32 +81,3 @@ app.post("/access_token", async (req, res) => {
   //console.log(`Saved ${task.key.name}: ${task.data.description}`);
   res.send("Hello World");
 });
-
-app.get("/access_token", async (req, res) => {
-  const refresh_token = req.cookies.spotify_refresh_token;
-
-  res.setHeader("Access-Control-Allow-Origin", "*");
-
-  try {
-    const response = await axios({
-      method: "POST",
-      url:
-        spotifyConfig.authorization.baseUrl +
-        spotifyConfig.authorization.tokenEndpoint,
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization:
-          "Basic " +
-          Buffer.from(
-            spotifyConfig.clientId + ":" + spotifyConfig.clientSecret
-          ).toString("base64")
-      },
-      data: encodeURI("grant_type=refresh_token&refresh_token=" + refresh_token)
-    });
-
-    res.json(response.data);
-  } catch (err) {
-    res.send(err.response.data);
-  }
-});
-//check httponly cookie for music_session_id

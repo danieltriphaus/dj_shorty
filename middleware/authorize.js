@@ -1,13 +1,6 @@
-//DONE: middleware: without auth_code redirect to spitify,
-//with auth_code:
-//  DONE: make post to spotify for access_tokens
-//  post /access_tokens
-//  set_cookie access_token without httponly
-//  redirect to /
-
 import config from "../ext_config/spotify.config";
 
-export default async ({ $config, query, redirect, res }) => {
+export default async ({ app, $config, query, redirect, res }) => {
   if (query.code) {
     try {
       const spotifyAccessTokenResponse = await spotifyAccessTokenRequest(
@@ -26,7 +19,12 @@ export default async ({ $config, query, redirect, res }) => {
         );
 
         //data = await response.json();
+        /*
+        app.$cookies.set("spotify_access_token", spotifyAccessTokens.access_token, {
+          maxAge: spotifyAccessTokens.expires_in,
 
+        });
+        */
         //set cookie
         res.setHeader("Set-Cookie", [
           "spotify_access_token=" +

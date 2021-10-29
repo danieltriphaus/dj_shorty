@@ -1,6 +1,12 @@
 import authorize from "../middleware/authorize.js";
+import Cookie from "cookie-universal";
 
 describe("/authorize tests", () => {
+  afterEach(() => {
+    let testCookies = Cookie();
+    testCookies.removeAll();
+  });
+
   it("should redirect to spotify without auth_code", () => {
     let url = "";
     const baseURL = "https://test.com/";
@@ -42,6 +48,7 @@ describe("/authorize tests", () => {
     let headers = {};
     const baseURL = "https://test.com/";
     await authorize({
+      app: { $cookies: Cookie() },
       $config: {
         baseURL
       },

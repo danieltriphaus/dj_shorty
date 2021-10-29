@@ -1,16 +1,10 @@
-import ApiMiddlewareObject from "../api/index.js";
+import ApiMiddlewareObject from "~/api/index.js";
 import request from "supertest";
 import axios from "axios";
 
 jest.mock("axios");
 
 describe("middleware for serverside requests to Google Cloud Datastore", () => {
-  let app = ApiMiddlewareObject.handler;
-  it("responds with status code 200", async () => {
-    const response = await request(app).get("/api/test");
-    expect(response.status).toEqual(200);
-  });
-
   it("should return access_token when a refresh_token is provided", async () => {
     const testSpotifyResponse = {
       data: {
@@ -21,7 +15,7 @@ describe("middleware for serverside requests to Google Cloud Datastore", () => {
     };
 
     axios.mockResolvedValue(testSpotifyResponse);
-
+    const app = ApiMiddlewareObject.handler;
     await request(app)
       .get("/access_token")
       .set("Accept", "application/json")

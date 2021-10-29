@@ -1,6 +1,9 @@
 import index from "../pages/index";
 import { mount, enableAutoDestroy } from "@vue/test-utils";
 import BaseInput from "../components/BaseInput";
+import SpotifyClient from "~/lib/SpotifyClient";
+
+jest.mock("~/lib/SpotifyClient");
 
 enableAutoDestroy(afterEach);
 
@@ -16,7 +19,8 @@ describe("index page tests", () => {
         $router: [],
         $route: { name: "index" },
         $axios: {},
-        $config: {}
+        $config: {},
+        $spotifyClient: new SpotifyClient()
       }
     };
   });
